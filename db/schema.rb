@@ -10,13 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_29_130507) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_29_143932) do
+  create_table "job_application_events", force: :cascade do |t|
+    t.integer "job_application_id", null: false
+    t.string "type"
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_application_id"], name: "index_job_application_events_on_job_application_id"
+  end
+
   create_table "job_applications", force: :cascade do |t|
     t.integer "job_id", null: false
     t.string "candidate_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_job_applications_on_job_id"
+  end
+
+  create_table "job_events", force: :cascade do |t|
+    t.integer "job_id", null: false
+    t.string "type"
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_job_events_on_job_id"
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -26,4 +44,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_130507) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "job_application_events", "job_applications"
+  add_foreign_key "job_events", "jobs"
 end
