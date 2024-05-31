@@ -9,11 +9,12 @@ Events::Job::Activated.create!(job: ongoing_job)
 old_job_application1  = JobApplication.create!(job: old_job, candidate_name: "old candidate1")
 _old_job_application2 = JobApplication.create!(job: old_job, candidate_name: "old candidate2")
 
-ongoing_job_application1 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate1")
-ongoing_job_application2 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate2")
-ongoing_job_application3 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate3")
-ongoing_job_application4 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate4")
-ongoing_job_application5 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate5")
+ongoing_job_application1  = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate1")
+ongoing_job_application2  = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate2")
+ongoing_job_application3  = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate3")
+ongoing_job_application4  = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate4")
+ongoing_job_application5  = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate5")
+_ongoing_job_application6 = JobApplication.create!(job: ongoing_job, candidate_name: "ongoing candidate6")
 
 # old candidate1 | HIRED
 Events::JobApplication::Interview.create!(job_application: old_job_application1, interview_date: 1.year.ago - 1.week)

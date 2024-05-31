@@ -10,6 +10,8 @@ class Job < ApplicationRecord
 
   validates :title, presence: true
 
+  scope :activated, -> { JobsByStatusQuery.new(self).activated }
+
   def status
     STATUS_MAPPINGS[events.last&.type]
   end
