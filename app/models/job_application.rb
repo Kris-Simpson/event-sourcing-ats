@@ -17,9 +17,9 @@ class JobApplication < ApplicationRecord
 
   validates :candidate_name, presence: true
 
-  scope :hired, -> { JobApplicationsByStatusQuery.new(status: HIRED).call }
-  scope :rejected, -> { JobApplicationsByStatusQuery.new(status: REJECTED).call }
-  scope :ongoing, -> { hired.invert_where.and(rejected.invert_where) }
+  scope :hired, -> { JobApplicationsByStatusQuery.new(self).hired }
+  scope :rejected, -> { JobApplicationsByStatusQuery.new(self).rejected }
+  scope :ongoing, -> { JobApplicationsByStatusQuery.new(self).ongoing }
 
   def status
     STATUS_MAPPINGS[events.without_notes.last&.type]
