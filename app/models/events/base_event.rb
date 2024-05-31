@@ -1,65 +1,67 @@
-class Events::BaseEvent < ActiveRecord::Base
-  self.abstract_class = true
+module Events
+  class BaseEvent < ApplicationRecord
+    self.abstract_class = true
 
-  after_initialize do
-    self.data ||= {}
-  end
-  before_create :apply_and_persist
+    after_initialize do
+      self.data ||= {}
+    end
+    before_create :apply_and_persist
 
-  def apply(aggregate)
-    raise NotImplementedError
-  end
-
-  private
-
-  delegate :aggregate_name, to: :class
-
-  class << self
-    def aggregate_name
-      inferred_aggregate = reflect_on_all_associations(:belongs_to).first
-
-      raise "Events must belong to an aggregate" if inferred_aggregate.nil?
-
-      inferred_aggregate.name
+    def apply(aggregate)
+      raise NotImplementedError
     end
 
-    def data_attributes(*attrs)
-      @data_attributes ||= []
+    private
 
-      attrs.map(&:to_s).each do |attr|
-        @data_attributes << attr unless @data_attributes.include?(attr)
+    delegate :aggregate_name, to: :class
 
-        define_method attr do
-          self.data ||= {}
-          self.data[attr]
-        end
+    class << self
+      def aggregate_name
+        inferred_aggregate = reflect_on_all_associations(:belongs_to).first
 
-        define_method "#{attr}=" do |arg|
-          self.data ||= {}
-          self.data[attr] = arg
-        end
+        raise "Events must belong to an aggregate" if inferred_aggregate.nil?
+
+        inferred_aggregate.name
       end
 
-      @data_attributes
+      def data_attributes(*attrs)
+        @data_attributes ||= []
+
+        attrs.map(&:to_s).each do |attr|
+          @data_attributes << attr unless @data_attributes.include?(attr)
+
+          define_method attr do
+            self.data ||= {}
+            self.data[attr]
+          end
+
+          define_method "#{attr}=" do |arg|
+            self.data ||= {}
+            self.data[attr] = arg
+          end
+        end
+
+        @data_attributes
+      end
     end
-  end
 
-  def aggregate=(model)
-    public_send("#{aggregate_name}=", model)
-  end
+    def aggregate=(model)
+      public_send("#{aggregate_name}=", model)
+    end
 
-  def aggregate
-    public_send(aggregate_name)
-  end
+    def aggregate
+      public_send(aggregate_name)
+    end
 
-  def apply_and_persist
-    # Lock! (all good, we're in the ActiveRecord callback chain transaction)
-    aggregate.lock! if aggregate.persisted?
+    def apply_and_persist
+      # Lock! (all good, we're in the ActiveRecord callback chain transaction)
+      aggregate.lock! if aggregate.persisted?
 
-    # Apply!
-    self.aggregate = apply(aggregate)
+      # Apply!
+      self.aggregate = apply(aggregate)
 
-    # Persist!
-    aggregate.save!
+      # Persist!
+      aggregate.save!
+    end
   end
 end

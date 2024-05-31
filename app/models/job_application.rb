@@ -1,10 +1,10 @@
 class JobApplication < ApplicationRecord
   STATUSES = [
-    APPLIED = "applied",
-    INTERVIEW = "interview",
-    HIRED = "hired",
-    REJECTED = "rejected"
-  ]
+    APPLIED = "applied".freeze,
+    INTERVIEW = "interview".freeze,
+    HIRED = "hired".freeze,
+    REJECTED = "rejected".freeze
+  ].freeze
   STATUS_MAPPINGS = {
     nil => APPLIED,
     "Events::JobApplication::Interview" => INTERVIEW,
