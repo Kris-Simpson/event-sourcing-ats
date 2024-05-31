@@ -39,9 +39,11 @@ gem "blueprinter"
 
 group :development, :test do
   gem "pry"
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
 end
 
-group :development do
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+group :test do
+  gem "shoulda-matchers"
 end
