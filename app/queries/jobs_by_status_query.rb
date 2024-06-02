@@ -4,7 +4,7 @@ class JobsByStatusQuery
   end
 
   def activated
-    joins.where(events: { type: Events::Job::BaseEvent::ACTIVATED_TYPE })
+    joins.where(events: { type: Events::Job::Activated.type })
   end
 
   private

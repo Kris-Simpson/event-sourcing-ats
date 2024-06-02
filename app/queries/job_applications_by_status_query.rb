@@ -4,16 +4,16 @@ class JobApplicationsByStatusQuery
   end
 
   def hired
-    joins.where(events: { type: Events::JobApplication::BaseEvent::HIRED_TYPE })
+    joins.where(events: { type: Events::JobApplication::Hired.type })
   end
 
   def rejected
-    joins.where(events: { type: Events::JobApplication::BaseEvent::REJECTED_TYPE })
+    joins.where(events: { type: Events::JobApplication::Rejected.type })
   end
 
   def ongoing
-    joins.where.not(events: { type: [Events::JobApplication::BaseEvent::HIRED_TYPE,
-                                     Events::JobApplication::BaseEvent::REJECTED_TYPE] })
+    joins.where.not(events: { type: [Events::JobApplication::Hired.type,
+                                     Events::JobApplication::Rejected.type] })
   end
 
   private
@@ -34,7 +34,7 @@ class JobApplicationsByStatusQuery
   # Returns a subquery that selects the last event for each JobApplication, excluding Note events.
   def last_events_subquery
     Events::JobApplication::BaseEvent.select(:job_application_id, "MAX(created_at) AS last_event_time")
-                                     .where.not(type: Events::JobApplication::BaseEvent::NOTE_TYPE)
+                                     .where.not(type: Events::JobApplication::Note.type)
                                      .group(:job_application_id)
   end
 end

@@ -16,6 +16,8 @@ module Events
     delegate :aggregate_name, to: :class
 
     class << self
+      alias_method :type, :name
+
       def aggregate_name
         inferred_aggregate = reflect_on_all_associations(:belongs_to).first
 
